@@ -83,7 +83,7 @@ export default function Hero() {
         className="w-full h-full absolute -top-32 flex justify-end items-center pointer-events-none "
       >
         <div className="w-3/4 flex justify-center items-center">
-          <div className="w-12 h-[600px] bg-light blur-[70px] rounded-3xl max-sm:rotate-15 sm:rotate-35 will-change-transform"></div>
+          <div className="w-12 h-150 bg-light blur-[70px] rounded-3xl max-sm:rotate-15 sm:rotate-35 will-change-transform"></div>
         </div>
       </motion.div>
     </div>
