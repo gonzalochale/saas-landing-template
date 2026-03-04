@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,19 +19,41 @@ import {
   Cross1Icon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const menuItems = [
     { name: "Pricing", href: "#pricing" },
     { name: "Testimonials", href: "#testimonials" },
   ];
 
+  const showNavbarBlur = isScrolled || isMenuOpen;
+
   return (
-    <nav className="sticky top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav
+      className={`sticky top-0 z-50 w-full transition-[background-color,backdrop-filter] duration-300 ease-out ${
+        showNavbarBlur
+          ? "backdrop-blur supports-backdrop-filter:bg-background/60"
+          : "backdrop-blur-0 supports-backdrop-filter:bg-background/0"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex sm:hidden">
@@ -137,7 +160,7 @@ export default function NavBar() {
                   height="12"
                   fill="none"
                   viewBox="0 0 1200 1227"
-                  className="ml-1"
+                  className="ml-1 size-4"
                 >
                   <path
                     fill="currentColor"
@@ -185,22 +208,22 @@ export default function NavBar() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.4 }}
-                  className="pt-2 mt-2"
+                  className=""
                 >
                   <Link
                     href="https://x.com/gonzalochale"
                     target="_blank"
-                    className="flex items-center px-3 py-2 text-base font-medium text-foreground hover:bg-muted rounded-md transition-colors duration-200"
+                    className="flex items-center gap-1 whitespace-nowrap px-3 py-2 text-base font-medium text-foreground hover:bg-muted rounded-md transition-colors duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Connect on{" "}
+                    <span>Connect on</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="16"
                       fill="none"
                       viewBox="0 0 1200 1227"
-                      className="ml-2"
+                      className="size-3"
                     >
                       <path
                         fill="currentColor"

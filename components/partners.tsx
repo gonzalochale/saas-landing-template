@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 import {
   Tooltip,
@@ -219,23 +220,24 @@ export default function Partners() {
           {icons.map((icon, index) => (
             <Tooltip key={icon.name}>
               <TooltipTrigger asChild>
-                <motion.div
-                  initial={{ y: 20, opacity: 0, filter: "blur(3px)" }}
-                  whileInView={{
-                    y: 0,
-                    filter: "blur(0px)",
-                    opacity: 1,
-                  }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 1,
-                    delay: index * 0.1,
-                    type: "spring",
-                    bounce: 0,
-                  }}
-                >
-                  {icon.svg}
-                </motion.div>
+                <div className="shrink-0">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{
+                      y: 0,
+                      opacity: 1,
+                    }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 1,
+                      delay: index * 0.1,
+                      type: "spring",
+                      bounce: 0,
+                    }}
+                  >
+                    {icon.svg}
+                  </motion.div>
+                </div>
               </TooltipTrigger>
               <TooltipContent>{icon.name}</TooltipContent>
             </Tooltip>

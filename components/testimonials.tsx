@@ -1,7 +1,13 @@
 "use client";
+
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 export default function Testimonials() {
+  const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const visibleCount = isMobile ? 2 : 6;
   const testimonials = [
     {
       name: "Sarah Chen",
@@ -87,7 +93,7 @@ export default function Testimonials() {
 
   const StarIcon = () => (
     <svg
-      className="w-4 h-4 text-yellow-500"
+      className="h-3.5 w-3.5 text-yellow-500 sm:h-4 sm:w-4"
       fill="currentColor"
       viewBox="0 0 20 20"
     >
@@ -95,15 +101,27 @@ export default function Testimonials() {
     </svg>
   );
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener("change", updateIsMobile);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateIsMobile);
+    };
+  }, []);
+
   return (
-    <section id="testimonials" className="py-24 px-4">
+    <section id="testimonials" className="px-3 py-16 sm:px-4 sm:py-24">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-20 flex flex-col gap-3"
+          className="mb-12 flex flex-col gap-3 text-center sm:mb-20"
         >
           <h2 className="text-xl font-semibold sm:text-2xl bg-linear-to-b from-foreground to-muted-foreground text-transparent bg-clip-text">
             Loved by Teams Worldwide
@@ -113,51 +131,67 @@ export default function Testimonials() {
           </p>
         </motion.div>
 
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.05,
-                ease: "easeOut",
-              }}
-              className="break-inside-avoid mb-8"
-            >
-              <div className="p-6 rounded-xl bg-card border border-border transition-colors duration-300">
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <StarIcon key={i} />
-                  ))}
-                </div>
+        <div className="relative">
+          <div className="columns-2 gap-3 space-y-3 sm:gap-8 sm:space-y-8 md:columns-2 lg:columns-3">
+            {(showAll ? testimonials : testimonials.slice(0, visibleCount)).map(
+              (testimonial, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.6,
+                    delay: index * 0.05,
+                    ease: "easeOut",
+                  }}
+                  className="mb-3 break-inside-avoid sm:mb-8"
+                >
+                  <div className="rounded-lg border border-border bg-card p-3 transition-colors duration-300 sm:rounded-xl sm:p-6">
+                    <div className="mb-2 flex sm:mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <StarIcon key={i} />
+                      ))}
+                    </div>
 
-                <p className="text-muted-foreground mb-6 leading-relaxed text-sm">
-                  &ldquo;{testimonial.content}&rdquo;
-                </p>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-linear-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center text-sm font-medium border border-primary/20">
-                    {testimonial.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-xs text-muted-foreground">
-                      {testimonial.role}
+                    <p className="mb-4 text-xs leading-snug text-muted-foreground sm:mb-6 sm:text-sm sm:leading-relaxed">
+                      &ldquo;{testimonial.content}&rdquo;
                     </p>
+
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-primary/20 bg-linear-to-br from-primary/20 to-primary/10 text-xs font-medium sm:h-10 sm:w-10 sm:text-sm">
+                        {testimonial.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="truncate text-xs font-semibold sm:text-sm">
+                          {testimonial.name}
+                        </h4>
+                        <p className="truncate text-[10px] leading-tight text-muted-foreground sm:text-xs">
+                          {testimonial.role}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              ),
+            )}
+          </div>
+
+          {!showAll && testimonials.length > visibleCount && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-background via-background/90 to-transparent" />
+          )}
         </div>
+
+        {!showAll && testimonials.length > visibleCount && (
+          <div className="mt-4 flex justify-center">
+            <Button variant="ghost" onClick={() => setShowAll(true)}>
+              Ver más
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

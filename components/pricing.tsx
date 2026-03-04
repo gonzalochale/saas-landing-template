@@ -50,14 +50,14 @@ export default function Pricing() {
   return (
     <section
       id="pricing"
-      className="w-full max-w-7xl mx-auto px-4 py-24 md:px-6"
+      className="mx-auto w-full max-w-7xl px-3 py-16 sm:px-4 sm:py-24 md:px-6"
     >
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="text-center mb-16 flex flex-col gap-3"
+        className="mb-12 flex flex-col gap-3 text-center sm:mb-16"
       >
         <h2 className="text-xl font-semibold sm:text-2xl bg-linear-to-b from-foreground to-muted-foreground text-transparent bg-clip-text">
           Choose Your Plan
@@ -68,7 +68,7 @@ export default function Pricing() {
         </p>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="mx-auto grid max-w-5xl gap-4 sm:gap-6 md:grid-cols-3 md:gap-8">
         {plans.map((plan, index) => (
           <motion.div
             key={plan.name}
@@ -76,49 +76,57 @@ export default function Pricing() {
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
-            className={`relative ${plan.isMostPop ? "scale-105" : ""}`}
+            className={`relative ${plan.isMostPop ? "md:scale-[1.03]" : ""}`}
           >
             <Card
-              className={`relative h-full ${
-                plan.isMostPop ? "border-2 border-primary shadow-xl" : ""
+              className={`relative h-full rounded-2xl ${
+                plan.isMostPop
+                  ? "border-2 border-primary bg-primary/5 shadow-lg"
+                  : "border border-border"
               }`}
             >
               {plan.isMostPop && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-card border-2 border-primary px-4 py-1 rounded-full text-sm font-medium">
+                  <span className="rounded-full border-2 border-primary bg-card px-3 py-1 text-xs font-medium sm:px-4 sm:text-sm">
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <CardContent className="p-6 pt-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                  <p className="text-muted-foreground text-sm mb-4">
+              <CardContent className="p-4 pt-6 sm:p-6 sm:pt-8">
+                <div className="mb-5 text-center sm:mb-6">
+                  <h3 className="mb-2 text-lg font-semibold sm:text-xl">
+                    {plan.name}
+                  </h3>
+                  <p className="mb-3 text-sm text-muted-foreground sm:mb-4">
                     {plan.desc}
                   </p>
                   <div className="flex items-baseline justify-center">
-                    <span className="text-4xl font-bold">${plan.price}</span>
-                    <span className="text-muted-foreground ml-1">/month</span>
+                    <span className="text-3xl font-bold sm:text-4xl">
+                      ${plan.price}
+                    </span>
+                    <span className="ml-1 text-sm text-muted-foreground sm:text-base">
+                      /month
+                    </span>
                   </div>
                 </div>
 
-                <Separator className="my-6" />
+                <Separator className="my-4 sm:my-6" />
 
-                <ul className="space-y-3">
+                <ul className="space-y-2.5 sm:space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="flex items-center text-sm"
+                      className="flex items-center text-xs sm:text-sm"
                     >
-                      <CheckIcon className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
+                      <CheckIcon className="mr-2 h-4 w-4 shrink-0 text-primary sm:mr-3" />
                       {feature}
                     </li>
                   ))}
                 </ul>
               </CardContent>
 
-              <CardFooter className="p-6 pt-0">
+              <CardFooter className="p-4 pt-0 sm:p-6 sm:pt-0">
                 <Button
                   className="w-full"
                   variant={plan.isMostPop ? "default" : "outline"}
